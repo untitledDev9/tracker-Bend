@@ -1,0 +1,81 @@
+const packages = {
+  "TRK-4821-BIKE": {
+    id: "TRK-4821-BIKE",
+    description: "Laptop & Accessories",
+    weight: "4.2 lbs",
+    sender: "Best Buy Fulfillment — Austin, TX",
+    recipient: "Marcus Johnson",
+    transport: "bike",
+    status: "in_transit",
+    estimatedDelivery: "Today, 5:30 PM",
+    currentStopIndex: 2,
+    stops: [
+      { id: 1, label: "Picked Up",        location: "Best Buy, 2901 S Capital of Texas Hwy", city: "Austin, TX",        time: "9:00 AM",  date: "Jun 13", status: "done"    },
+      { id: 2, label: "Dispatch Hub",      location: "Courier Hub — Downtown Austin",         city: "Austin, TX",        time: "10:15 AM", date: "Jun 13", status: "done"    },
+      { id: 3, label: "Out for Delivery",  location: "East 6th Street Corridor",              city: "Austin, TX",        time: "1:40 PM",  date: "Jun 13", status: "active"  },
+      { id: 4, label: "Delivered",         location: "2218 Chestnut Ave, Unit 4B",            city: "Austin, TX 78702",  time: "5:30 PM",  date: "Jun 13", status: "pending" },
+    ],
+  },
+
+  "TRK-7753-TRUCK": {
+    id: "TRK-7753-TRUCK",
+    description: "Living Room Furniture Set",
+    weight: "187 lbs",
+    sender: "IKEA Distribution Center — Elizabeth, NJ",
+    recipient: "Sarah & Tom Reeves",
+    transport: "truck",
+    status: "in_transit",
+    estimatedDelivery: "Jun 15, 2:00 PM",
+    currentStopIndex: 2,
+    stops: [
+      { id: 1, label: "Warehouse Pickup",  location: "IKEA DC, 1000 IKEA Dr",                 city: "Elizabeth, NJ",      time: "6:30 AM",  date: "Jun 13", status: "done"    },
+      { id: 2, label: "Regional Hub",      location: "FedEx Freight Terminal — Philadelphia",  city: "Philadelphia, PA",   time: "11:00 AM", date: "Jun 13", status: "done"    },
+      { id: 3, label: "In Transit",        location: "I-95 South Corridor",                    city: "Delaware / MD",      time: "2:30 PM",  date: "Jun 13", status: "active"  },
+      { id: 4, label: "Local Hub",         location: "UPS Freight Hub — Richmond",             city: "Richmond, VA",       time: "8:00 AM",  date: "Jun 14", status: "pending" },
+      { id: 5, label: "Out for Delivery",  location: "Route 360 Delivery Zone",               city: "Richmond, VA",       time: "10:00 AM", date: "Jun 15", status: "pending" },
+      { id: 6, label: "Delivered",         location: "4402 Grove Ave",                         city: "Richmond, VA 23221", time: "2:00 PM",  date: "Jun 15", status: "pending" },
+    ],
+  },
+
+  "TRK-3390-PLANE": {
+    id: "TRK-3390-PLANE",
+    description: "Medical Device Components",
+    weight: "11.8 lbs",
+    sender: "MedTech Exports GmbH — Frankfurt, Germany",
+    recipient: "Northwestern Medical Supply",
+    transport: "plane",
+    status: "in_transit",
+    estimatedDelivery: "Jun 14, 8:00 AM",
+    currentStopIndex: 2,
+    stops: [
+      { id: 1, label: "Departed",           location: "Frankfurt Airport (FRA)",               city: "Frankfurt, Germany", time: "11:40 PM", date: "Jun 12", status: "done"    },
+      { id: 2, label: "Customs Hold",       location: "JFK Intl. Airport — Customs & Border",  city: "New York, NY",       time: "5:00 AM",  date: "Jun 13", status: "done"    },
+      { id: 3, label: "Airborne",           location: "ORD Approach — Midwest Airspace",        city: "Chicago, IL",        time: "9:45 AM",  date: "Jun 13", status: "active"  },
+      { id: 4, label: "Landed & Cleared",   location: "O'Hare International Airport (ORD)",    city: "Chicago, IL",        time: "11:00 AM", date: "Jun 13", status: "pending" },
+      { id: 5, label: "Last Mile",          location: "DHL Express — Chicago North",            city: "Chicago, IL",        time: "6:00 PM",  date: "Jun 13", status: "pending" },
+      { id: 6, label: "Delivered",          location: "251 E Huron St — Northwestern Medicine", city: "Chicago, IL 60611",  time: "8:00 AM",  date: "Jun 14", status: "pending" },
+    ],
+  },
+
+  "TRK-6104-SHIP": {
+    id: "TRK-6104-SHIP",
+    description: "Industrial Steel Components",
+    weight: "3,400 lbs",
+    sender: "Shanghai Steel Co. — Shanghai, China",
+    recipient: "Detroit Precision Mfg.",
+    transport: "ship",
+    status: "in_transit",
+    estimatedDelivery: "Jun 22, 9:00 AM",
+    currentStopIndex: 1,
+    stops: [
+      { id: 1, label: "Port of Origin",    location: "Port of Shanghai",                       city: "Shanghai, China",    time: "8:00 AM",  date: "Jun 5",  status: "done"    },
+      { id: 2, label: "Pacific Crossing",  location: "North Pacific Ocean Route",               city: "International",      time: "—",        date: "Jun 13", status: "active"  },
+      { id: 3, label: "Port of Entry",     location: "Port of Long Beach",                     city: "Long Beach, CA",     time: "6:00 AM",  date: "Jun 18", status: "pending" },
+      { id: 4, label: "Customs Clearance", location: "CBP — Los Angeles District",              city: "Los Angeles, CA",    time: "2:00 PM",  date: "Jun 18", status: "pending" },
+      { id: 5, label: "Rail Transfer",     location: "BNSF Intermodal Terminal",                city: "San Bernardino, CA", time: "9:00 AM",  date: "Jun 19", status: "pending" },
+      { id: 6, label: "Delivered",         location: "14800 Mound Rd — Detroit Precision",      city: "Detroit, MI 48212",  time: "9:00 AM",  date: "Jun 22", status: "pending" },
+    ],
+  },
+};
+
+module.exports = packages;

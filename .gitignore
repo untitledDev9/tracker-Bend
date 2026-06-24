@@ -1,0 +1,19 @@
+node_modules
+
+# Environment variables — never commit these
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Database files (if SQLite is added later)
+*.db
+*.sqlite
+
+# OS
+.DS_Store
+Thumbs.db

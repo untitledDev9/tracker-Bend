@@ -258,6 +258,11 @@ Respond with ONLY valid JSON — no markdown, no explanation:
   }
 });
 
+/* ── Health check ── */
+app.get("/api/health", (_req, res) => {
+  res.json({ status: "ok", uptime: Math.floor(process.uptime()), ts: Date.now() });
+});
+
 /* ── Start ── */
 connectDB()
   .then(() => seedAdmin())

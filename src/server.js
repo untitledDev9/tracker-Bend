@@ -106,6 +106,21 @@ app.put("/api/auth/password", requireAdmin, async (req, res) => {
   res.json({ message: "Password updated" });
 });
 
+/* Change username */
+app.put("/api/auth/username", requireAdmin, async (req, res) => {
+  const { newUsername, currentPassword } = req.body;
+  if (!newUsername || !currentPassword) return res.status(400).json({ error: "Both fields required" });
+  if (newUsername.length < 3) return res.status(400).json({ error: "Username must be at least 3 characters" });
+
+  const admin = await Admin.findById(req.admin.id);
+  const ok = await admin.verifyPassword(currentPassword);
+  if (!ok) return res.status(401).json({ error: "Current password is incorrect" });
+
+  admin.username = newUsername.toLowerCase();
+  await admin.save();
+  res.json({ message: "Username updated", username: admin.username });
+});
+
 /* ════════════════════════════════════════════
    PACKAGE ROUTES
    ════════════════════════════════════════════ */

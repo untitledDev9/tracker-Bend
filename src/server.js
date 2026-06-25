@@ -142,12 +142,12 @@ app.get("/api/packages", requireAdmin, async (_req, res) => {
 /* Admin: create package */
 app.post("/api/packages", requireAdmin, async (req, res) => {
   const body = req.body;
-  if (!body.id || !body.stops?.length) return res.status(400).json({ error: "id and stops are required" });
+  if (!body.id || !body.stops?.length) return res.status(400).json({ error: "Tracking number and at least one stop are required." });
   try {
     const pkg = await Package.create({ ...body, id: body.id.toUpperCase() });
     res.status(201).json(pkg.toClient());
   } catch (err) {
-    if (err.code === 11000) return res.status(409).json({ error: `Package ID "${body.id}" already exists` });
+    if (err.code === 11000) return res.status(409).json({ error: `A package with tracking number "${body.id}" already exists.` });
     res.status(400).json({ error: err.message });
   }
 });
@@ -185,7 +185,7 @@ app.post("/api/ai/checkpoints", requireAdmin, aiLimit, async (req, res) => {
 
   const key = process.env.GROQ_API_KEY;
   if (!key || key === "your_groq_api_key_here") {
-    return res.status(500).json({ error: "GROQ_API_KEY is not configured in backend/.env" });
+    return res.status(500).json({ error: "AI is not set up yet. Please add your GROQ_API_KEY to the server environment." });
   }
 
   const modeLabels = {
@@ -240,7 +240,7 @@ Respond with ONLY valid JSON — no markdown, no explanation:
 
     let parsed;
     try { parsed = JSON.parse(cleaned); }
-    catch { return res.status(500).json({ error: "AI returned invalid JSON. Try again." }); }
+    catch { return res.status(500).json({ error: "AI couldn't generate a valid response. Please try again." }); }
 
     const stops = (parsed.stops || []).map(s => ({
       id: randomUUID(), label: s.label || "In Transit",
@@ -254,7 +254,7 @@ Respond with ONLY valid JSON — no markdown, no explanation:
 
   } catch (err) {
     console.error("Groq error:", err.message);
-    res.status(500).json({ error: err.message || "AI generation failed" });
+    res.status(500).json({ error: "AI generation failed. Please try again in a moment." });
   }
 });
 

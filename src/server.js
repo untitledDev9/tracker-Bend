@@ -12,11 +12,21 @@ const Admin     = require("./models/Admin");
 
 const app    = express();
 const PORT   = process.env.PORT   || 4000;
-const ORIGIN = process.env.ALLOWED_ORIGIN || "http://localhost:5173";
 const JWT_SECRET = process.env.JWT_SECRET || "changeme_in_production";
 
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN || "http://localhost:5173")
+  .split(",")
+  .map(o => o.trim())
+  .filter(Boolean);
+
 /* ── CORS ── */
-app.use(cors({ origin: ORIGIN, credentials: true }));
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    cb(new Error(`CORS: origin "${origin}" not allowed`));
+  },
+  credentials: true,
+}));
 app.use(express.json());
 
 /* ── JWT auth middleware ── */
@@ -41,12 +51,17 @@ const aiLimit = rateLimit({
 
 /* ── Seed DB on first start ── */
 async function seedAdmin() {
-  const exists = await Admin.findOne();
-  if (exists) return;
-  const username = process.env.ADMIN_USERNAME || "tobi";
-  const password = process.env.ADMIN_PASSWORD || "assetfreight2025";
-  await Admin.create({ username, password });
-  console.log(`Default admin created → username: ${username}`);
+  const admins = [
+    { username: process.env.ADMIN_USERNAME || "tobi", password: process.env.ADMIN_PASSWORD || "assetfreight2025" },
+    { username: "ahmed", password: "ahmed123" },
+  ];
+  for (const { username, password } of admins) {
+    const exists = await Admin.findOne({ username });
+    if (!exists) {
+      await Admin.create({ username, password });
+      console.log(`Admin created → username: ${username}`);
+    }
+  }
 }
 
 async function seedPackage() {
@@ -260,7 +275,7 @@ Respond with ONLY valid JSON — no markdown, no explanation:
 
 /* ── Health check ── */
 app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok", uptime: Math.floor(process.uptime()), ts: Date.now() });
+  res.json({ status: "ok" });
 });
 
 /* ── Start ── */
@@ -268,7 +283,7 @@ connectDB()
   .then(() => seedAdmin())
   .then(() => seedPackage())
   .then(() => {
-    app.listen(PORT, () => console.log(`Asset Freight API  →  http://localhost:${PORT}  (origin: ${ORIGIN})`));
+    app.listen(PORT, () => console.log(`Asset Freight API  →  http://localhost:${PORT}  (origins: ${ALLOWED_ORIGINS.join(", ")})`));
   })
   .catch(err => {
     console.error("Startup failed:", err.message);

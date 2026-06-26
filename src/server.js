@@ -173,20 +173,26 @@ app.post("/api/ai/checkpoints", requireAdmin, aiLimit, async (req, res) => {
     ship:  "sea freight / cargo ship",
   };
 
-  const prompt = `You are a logistics routing expert for Asset Freight Delivery Cargo.
+  const prompt = `You are a global logistics routing expert for Asset Freight Delivery Cargo.
 
 A package is being shipped FROM: "${pickup}" TO: "${dropoff}" via ${modeLabels[transport] || transport}.
 
-Generate exactly ${count} real, geographically accurate intermediate checkpoints a package would physically pass through along this route — in transit order.
+STEP 1 — Plan the real-world route first:
+Think about which countries, regions, and major transit hubs this shipment would actually pass through geographically. Consider the most commonly used international freight corridors for this transport mode and route.
+
+STEP 2 — Pick ${count} checkpoints from that route in order:
+Select the most important and realistic stops a real freight shipment would hit — prioritising country entry/exit points, major hub cities, and key transit facilities.
 
 Rules:
-- Checkpoints must be real places between origin and destination (not the origin or destination themselves)
-- Use real city names, distribution hubs, port names, airports, or sorting facilities
-- Truck routes: use interstate corridor cities and regional distribution centers
-- Air freight: include cargo terminal, airline hub city, and destination airport area
-- Ships: use real seaport names along the shipping lane
-- Bike couriers: use real district or neighborhood names within the same city
-- If you cannot confidently find ${count} distinct verified checkpoints, return as many as you can and set "partial": true
+- Always think geographically — the stops must follow the real physical path from origin to destination
+- Every country the shipment passes through should appear as at least one stop
+- For each country entry: include the border crossing, customs city, or first major hub in that country
+- Road/truck: major corridor cities, border crossings, customs depots, regional freight hubs
+- Air freight: origin cargo terminal → connecting hub airport(s) → destination cargo terminal (use real IATA hub airports e.g. DXB, AMS, FRA, SIN, HKG, ORD, MEM, NBO, LOS)
+- Sea freight: ports along the actual shipping lane in correct geographic order (e.g. Lagos → Lomé → Abidjan → Dakar → Las Palmas → Rotterdam)
+- Bike/courier: real districts or neighborhoods within the city in travel order
+- Stops must be real named places — no invented or generic names
+- If you cannot confidently find ${count} verified stops, return as many real ones as you can and set "partial": true
 
 Respond with ONLY valid JSON — no markdown, no explanation:
 {
@@ -194,12 +200,12 @@ Respond with ONLY valid JSON — no markdown, no explanation:
   "found": ${count},
   "stops": [
     {
-      "label": "Short action label e.g. Departed Sorting Hub",
-      "location": "Facility or place name e.g. FedEx Ground Memphis Hub",
+      "label": "Short action label e.g. Transited through Dubai Hub",
+      "location": "Specific facility or place e.g. Dubai Cargo Village, Al Maktoum Airport",
       "city": "City name",
-      "state": "2-letter US state code, or empty string if international",
+      "state": "State, province, or region in local format — empty string if not applicable",
       "zip": "",
-      "country": "Country name if not USA, otherwise empty string"
+      "country": "Full country name — required for every stop"
     }
   ]
 }`;

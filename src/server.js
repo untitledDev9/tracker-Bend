@@ -49,43 +49,6 @@ const aiLimit = rateLimit({
   message: { error: "Too many AI requests — please wait a few minutes." },
 });
 
-/* ── Seed DB on first start ── */
-async function seedAdmin() {
-  const admins = [
-    { username: process.env.ADMIN_USERNAME || "tobi", password: process.env.ADMIN_PASSWORD || "assetfreight2025" },
-    { username: "ahmed", password: "ahmed123" },
-  ];
-  for (const { username, password } of admins) {
-    const exists = await Admin.findOne({ username });
-    if (!exists) {
-      await Admin.create({ username, password });
-      console.log(`Admin created → username: ${username}`);
-    }
-  }
-}
-
-async function seedPackage() {
-  const count = await Package.countDocuments();
-  if (count > 0) return;
-  await Package.create({
-    id: "AFKP3M748291NXQR65",
-    description: "Sample Electronics Package",
-    weight: "3.5 lbs",
-    sender: "Asset Freight HQ, Los Angeles",
-    recipient: "John Smith",
-    transport: "truck",
-    status: "in_transit",
-    estimatedDelivery: "Jun 30, 5:00 PM",
-    stops: [
-      { id: randomUUID(), label: "Picked up from sender", location: "Asset Freight HQ", city: "Los Angeles", state: "CA", zip: "90001", country: "", date: "2025-06-24", time: "09:00", status: "done" },
-      { id: randomUUID(), label: "Arrived at sorting hub", location: "FedEx Ground Hub", city: "Phoenix", state: "AZ", zip: "85001", country: "", date: "2025-06-25", time: "14:30", status: "done" },
-      { id: randomUUID(), label: "In transit", location: "Highway 10 Corridor", city: "El Paso", state: "TX", zip: "79901", country: "", date: "2025-06-26", time: "08:00", status: "active" },
-      { id: randomUUID(), label: "Out for delivery", location: "Local Delivery Hub", city: "Houston", state: "TX", zip: "77001", country: "", date: "2025-06-27", time: "10:00", status: "pending" },
-      { id: randomUUID(), label: "Delivered", location: "123 Main Street", city: "Houston", state: "TX", zip: "77002", country: "", date: "2025-06-30", time: "17:00", status: "pending" },
-    ],
-  });
-  console.log("Sample package seeded → TRK-0001-TRUCK");
-}
 
 /* ════════════════════════════════════════════
    AUTH ROUTES
@@ -280,8 +243,6 @@ app.get("/api/health", (_req, res) => {
 
 /* ── Start ── */
 connectDB()
-  .then(() => seedAdmin())
-  .then(() => seedPackage())
   .then(() => {
     app.listen(PORT, () => console.log(`Asset Freight API  →  http://localhost:${PORT}  (origins: ${ALLOWED_ORIGINS.join(", ")})`));
   })
